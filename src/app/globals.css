@@ -1,68 +1,121 @@
-body {
-  margin: 0;
-  padding: 0;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
 }
 
-h1 {
-  margin: 20px 0;
-  font-size: 2.5rem;
-  color: #222;
+.icon {
+  width: 50px;
+  height: 50px;
+  margin: 10px auto;
+  display: block;
+}
+
+.status {
+  background-color: #e9ecef;
+
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px auto;
   text-align: center;
 }
 
-h2 {
-  margin: 15px 0;
-  font-size: 1.5rem;
-  color: #444;
+.status-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px 0;
+  background-color: #e9ecef;
+
+
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
+.status-item {
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
+}
+
+.switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 25px;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #07df38;
+}
+
+input:checked + .slider:before {
+  transform: translateX(25px);
+}
+
+.switch-label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.log {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px auto;
+  max-height: 150px;
+  overflow-y: auto;
+  font-size: 14px;
+  text-align: left;
+}
+
+.pause-button {
+  background-color: #ff4d4d;
+  color: white;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  margin: 10px;
+  margin-top: 10px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 20px;
-}
-
-.status {
-  background-color: #e9ecef;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 10px 0;
-  text-align: left;
-  font-size: 1.1rem;
-}
-
-.log {
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
-  max-height: 200px;
-  overflow-y: auto;
-  font-size: 0.9rem;
-}
-
-footer {
-  margin-top: 20px;
-  font-size: 0.9rem;
-  color: #666;
+.pause-button:hover {
+  background-color: #cc0000;
 }
