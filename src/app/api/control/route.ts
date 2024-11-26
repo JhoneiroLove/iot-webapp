@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const type = searchParams.get('type');
   const state = searchParams.get('state');
 
-  const esp32Url = `http://192.168.1.48`; // Cambia <ESP32_IP> por la IP de tu ESP32
+  const esp32Url = `http://192.168.36.50`; // Cambia <ESP32_IP> por la IP de tu ESP32
 
   try {
     let endpoint = '';

@@ -14,7 +14,6 @@
 
 .status {
   background-color: #e9ecef;
-
   padding: 20px;
   border-radius: 10px;
   margin: 20px auto;
@@ -27,8 +26,6 @@
   align-items: center;
   margin: 20px 0;
   background-color: #e9ecef;
-
-
 }
 
 .status-item {
@@ -118,4 +115,37 @@ input:checked + .slider:before {
 
 .pause-button:hover {
   background-color: #cc0000;
+}
+
+/* Estilos para los botones de encender y apagar LEDs */
+.control-button-on {
+  background-color: #007bff;  /* Azul para encender */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.control-button-off {
+  background-color: #dc3545;  /* Rojo para apagar */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.control-button-on:hover {
+  background-color: #0056b3;  /* Azul oscuro al pasar el mouse */
+}
+
+.control-button-off:hover {
+  background-color: #c82333;  /* Rojo oscuro al pasar el mouse */
 }

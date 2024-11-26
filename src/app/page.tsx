@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const ESP32_BASE_URL = 'http://192.168.1.48';
+const ESP32_BASE_URL = 'http://192.168.36.50';
 
 export default function Home() {
     const [systemStatus, setSystemStatus] = useState('Apagado');
@@ -15,6 +15,62 @@ export default function Home() {
         pir3: false,
     });
     const [activityLog, setActivityLog] = useState<string[]>([]);
+
+    // Estado de los LEDs
+    const [ledStatus, setLedStatus] = useState({
+        led1: false,
+        baño1: false,
+        baño2: false,
+        ledsala: false,
+        ledDormitorio1: false,
+        ledDormitorio2: false,
+        ledDormitorio3: false,
+        ledCocina: false,
+    });
+
+    // Función para obtener el estado de los LEDs
+    const fetchLedStatus = async () => {
+        try {
+            const response = await fetch(`${ESP32_BASE_URL}/led-status`);
+            const data = await response.json();
+            setLedStatus({
+                led1: data.led1,
+                baño1: data.baño1,
+                baño2: data.baño2,
+                ledsala: data.ledsala,
+                ledDormitorio1: data.ledDormitorio1,
+                ledDormitorio2: data.ledDormitorio2,
+                ledDormitorio3: data.ledDormitorio3,
+                ledCocina: data.ledCocina,
+            });
+        } catch (error) {
+            console.error('Error al obtener el estado de los LEDs:', error);
+        }
+    };
+
+    // Función para encender y apagar LEDs individuales
+    const controlLED = async (led: string, command: string) => {
+        try {
+            const response = await fetch(`${ESP32_BASE_URL}/led-control?led=${led}&state=${command}`);
+            const data = await response.text();
+            alert(data); // Mostrar mensaje de confirmación
+            fetchLedStatus(); // Actualizar el estado de los LEDs después de la acción
+        } catch (error) {
+            console.error('Error al controlar el LED:', error);
+        }
+    };
+
+    // Función para encender y apagar todos los LEDs
+    const controlAllLEDs = async (command: string) => {
+        try {
+            const response = await fetch(`${ESP32_BASE_URL}/control-all-leds?state=${command}`);
+            const data = await response.text();
+            alert(data); // Mostrar mensaje de confirmación
+            fetchLedStatus(); // Actualizar el estado de los LEDs después de la acción
+        } catch (error) {
+            console.error('Error al controlar todos los LEDs:', error);
+        }
+    };
 
     // Encender/Apagar Sistema
     const controlSystem = async (command: string) => {
@@ -113,6 +169,17 @@ export default function Home() {
         }
     };
 
+    // Efecto para actualización periódica
+    useEffect(() => {
+        const interval = setInterval(() => {
+            updateTemperature();
+            updateSensors();
+            fetchLedStatus();
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     // Configuración de WebSocket para registro de actividad
     useEffect(() => {
         const ws = new WebSocket(`ws://${ESP32_BASE_URL.split('//')[1]}/ws`);
@@ -139,15 +206,6 @@ export default function Home() {
         };
     }, []);
 
-    // Efecto para actualización periódica
-    useEffect(() => {
-        const interval = setInterval(() => {
-            updateTemperature();
-            updateSensors();
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
-
     return (
         <div className="container">
             <h1>Sistema de Seguridad ESP32</h1>
@@ -155,11 +213,6 @@ export default function Home() {
             {/* Estado del Sistema */}
             <div className="status">
                 <h2>Estado del Sistema</h2>
-                <img
-                    src={`/assets/${systemStatus === 'Encendido' ? 'icon-on.png' : 'icon-off.png'}`}
-                    alt="Estado del Sistema"
-                    className="icon"
-                />
                 <div className="switch-container">
                     <label className="switch">
                         <input
@@ -169,9 +222,7 @@ export default function Home() {
                         />
                         <span className="slider"></span>
                     </label>
-                    <span className="switch-label">
-                        {systemStatus === 'Encendido' ? 'Encendido' : 'Apagado'}
-                    </span>
+                    <span className="switch-label">{systemStatus}</span>
                 </div>
             </div>
 
@@ -195,9 +246,7 @@ export default function Home() {
                         />
                         <span className="slider"></span>
                     </label>
-                    <span className="switch-label">
-                        {alarmStatus === 'Activada' ? 'Activada' : 'Desactivada'}
-                    </span>
+                    <span className="switch-label">{alarmStatus}</span>
                 </div>
                 <button
                     className="pause-button"
@@ -208,31 +257,43 @@ export default function Home() {
                 </button>
             </div>
 
-            {/* Temperatura y Humedad */}
-            <div className="status-row">
-                <div className="status-item">
-                    <h2>Temperatura</h2>
-                    <img
-                        src={`/assets/${
-                            parseFloat(temperature) >= 35 ? 'high-temperature.png' : 'temperature.png'
-                        }`}
-                        alt="Estado de la Temperatura"
-                        className="icon"
-                    />
-                    <p>{temperature}</p>
-                </div>
-                <div className="status-item">
-                    <h2>Humedad</h2>
-                    <img src="/assets/humidity.png" alt="Estado de la Humedad" className="icon" />
-                    <p>{humidity}</p>
-                </div>
-            </div>
-
-            {/* Botón para apagar el buzzer 2 */}
+            {/* Control de LEDs */}
             <div className="status">
-                <button className="pause-button" onClick={disableBuzzer2}>
-                    Apagar Alarma de Incendios
-                </button>
+                <h2>Control de LEDs</h2>
+                <button className="control-button-on" onClick={() => controlAllLEDs('on')}>Encender todos los LEDs</button>
+                <button className="control-button-off" onClick={() => controlAllLEDs('off')}>Apagar todos los LEDs</button>
+
+                <h3>Pasadizo</h3>
+                <button className="control-button-on" onClick={() => controlLED('led1', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('led1', 'off')}>Apagar LED</button><br />
+
+                <h3>Sala</h3>
+                <button className="control-button-on" onClick={() => controlLED('ledsala', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('ledsala', 'off')}>Apagar LED</button><br />
+
+                <h3>Dormitorio 1</h3>
+                <button className="control-button-on" onClick={() => controlLED('ledDormitorio1', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('ledDormitorio1', 'off')}>Apagar LED</button><br />
+
+                <h3>Dormitorio 2</h3>
+                <button className="control-button-on" onClick={() => controlLED('ledDormitorio2', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('ledDormitorio2', 'off')}>Apagar LED</button><br />
+
+                <h3>Dormitorio 3</h3>
+                <button className="control-button-on" onClick={() => controlLED('ledDormitorio3', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('ledDormitorio3', 'off')}>Apagar LED</button><br />
+
+                <h3>Cocina</h3>
+                <button className="control-button-on" onClick={() => controlLED('ledCocina', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('ledCocina', 'off')}>Apagar LED</button><br />
+
+                <h3>Baño 1</h3>
+                <button className="control-button-on" onClick={() => controlLED('baño1', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('baño1', 'off')}>Apagar LED</button><br />
+
+                <h3>Baño 2</h3>
+                <button className="control-button-on" onClick={() => controlLED('baño2', 'on')}>Encender LED</button>
+                <button className="control-button-off" onClick={() => controlLED('baño2', 'off')}>Apagar LED</button><br />
             </div>
 
             {/* Registro de Actividad */}
