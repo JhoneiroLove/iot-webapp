@@ -208,7 +208,7 @@ export default function Home() {
 
     // Función para redirigir al enlace de la cámara en una nueva ventana
     const openCameraLink = () => {
-        window.open('https://c369-2800-4b0-803e-824b-e55f-b3c1-7dba-c69b.ngrok-free.app/', '_blank'); // Cambia a la URL correcta de tu cámara
+        window.open('https://presumably-legible-terrier.ngrok-free.app/', '_blank'); // Cambia a la URL correcta de tu cámara
     };
 
     return (
