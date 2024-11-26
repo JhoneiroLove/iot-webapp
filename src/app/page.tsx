@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const ESP32_BASE_URL = 'http://192.168.0.20'; // Tu ESP32 Base URL
+const ESP32_BASE_URL = 'https://striking-curiously-ant.ngrok-free.app'; // Tu ESP32 Base URL
 
 export default function Home() {
     const [systemStatus, setSystemStatus] = useState('Apagado');
