@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const ESP32_BASE_URL = 'http://192.168.36.50';
+const ESP32_BASE_URL = 'http://192.168.36.50'; // Tu ESP32 Base URL
 
 export default function Home() {
     const [systemStatus, setSystemStatus] = useState('Apagado');
@@ -206,6 +206,11 @@ export default function Home() {
         };
     }, []);
 
+    // Función para redirigir al enlace de la cámara en una nueva ventana
+    const openCameraLink = () => {
+        window.open('https://c369-2800-4b0-803e-824b-e55f-b3c1-7dba-c69b.ngrok-free.app/', '_blank'); // Cambia a la URL correcta de tu cámara
+    };
+
     return (
         <div className="container">
             <h1>Sistema de Seguridad ESP32</h1>
@@ -294,6 +299,14 @@ export default function Home() {
                 <h3>Baño 2</h3>
                 <button className="control-button-on" onClick={() => controlLED('baño2', 'on')}>Encender LED</button>
                 <button className="control-button-off" onClick={() => controlLED('baño2', 'off')}>Apagar LED</button><br />
+            </div>
+
+            {/* Botón para ver la cámara */}
+            <div className="status">
+                <h2>Acceder a la Cámara</h2>
+                <button onClick={openCameraLink} className="control-button-on">
+                    Ver Cámara
+                </button>
             </div>
 
             {/* Registro de Actividad */}
